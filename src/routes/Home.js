@@ -1,18 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { dbService } from "../firebase";
-import { collection, addDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+} from "firebase/firestore";
+import Kweet from "../components/Kweet";
 
-const Home = () => {
+const Home = ({ userObj }) => {
   const [kweet, setKweet] = useState("");
   const [kweets, setKweets] = useState([]);
-  const getDocuments = async () => {
-    const k = await getDocs(collection(dbService, "kweet"));
-    k.forEach((doc) => {
-      const newKweet = {
-        ...doc.data(),
-        id: doc.id,
-      };
-      setKweets((prev) => [newKweet, ...prev]);
+  const getDocuments = () => {
+    const dbKweets = query(
+      collection(dbService, "kweet"),
+      orderBy("createdAt")
+    );
+    onSnapshot(dbKweets, (querySnapshot) => {
+      const newKweets = querySnapshot.docs.map((doc) => {
+        return {
+          ...doc.data(),
+          id: doc.id,
+        };
+      });
+      setKweets(newKweets);
     });
   };
   useEffect(() => {
@@ -21,8 +33,9 @@ const Home = () => {
   const onSubmit = async (event) => {
     event.preventDefault();
     await addDoc(collection(dbService, "kweet"), {
-      kweet,
+      text: kweet,
       createdAt: Date.now(),
+      creatorId: userObj.uid,
     });
     setKweet("");
   };
@@ -44,17 +57,7 @@ const Home = () => {
         />
         <input type="submit" value="Kweet" />
       </form>
-      <div>
-        <ul>
-          {kweets.map((data) => {
-            return (
-              <li key={data.id}>
-                {data.kweet}, created : {data.createdAt}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+      <div>{<Kweet kweets={kweets} userObj={userObj} />}</div>
     </>
   );
 };
