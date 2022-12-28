@@ -1,13 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import { authService } from "../firebase";
 
-const Navigation = () => {
-  const onSignOut = async () => {
-    await signOut(authService);
-  };
-
+const Navigation = ({ userObj }) => {
   return (
     <>
       <nav>
@@ -16,10 +10,9 @@ const Navigation = () => {
             <Link to="/">Home</Link>
           </li>
           <li>
-            <Link to="/profile">Profile</Link>
+            <Link to="/profile">{userObj.displayName}의 Profile</Link>
           </li>
         </ul>
-        <button onClick={onSignOut}>Sign out</button>
       </nav>
     </>
   );

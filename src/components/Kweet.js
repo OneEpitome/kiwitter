@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { doc, deleteDoc, updateDoc } from "firebase/firestore";
-import { dbService } from "../firebase";
+import { dbService, storage } from "../firebase";
+import { deleteObject, ref } from "firebase/storage";
 
 const Kweet = ({ kweetObj, userObj }) => {
   const [edit, setEdit] = useState(false);
@@ -26,6 +27,7 @@ const Kweet = ({ kweetObj, userObj }) => {
     if (ok) {
       // delete kweet
       await deleteDoc(doc(dbService, "kweet", event.target.id));
+      await deleteObject(ref(storage, kweetObj.attachmentURL));
     }
   };
   return (
@@ -43,6 +45,14 @@ const Kweet = ({ kweetObj, userObj }) => {
           <h4>
             {kweetObj.text}, created : {kweetObj.createdAt}
           </h4>
+          {kweetObj.attachmentURL && (
+            <img
+              src={kweetObj.attachmentURL}
+              alt="attachment"
+              width={100}
+              height={100}
+            />
+          )}
           {userObj.uid === kweetObj.creatorId ? (
             <div>
               <button onClick={onDelete} id={kweetObj.id}>

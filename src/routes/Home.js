@@ -7,12 +7,14 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
 import Kweet from "../components/Kweet";
 
 const Home = ({ userObj }) => {
   const [kweet, setKweet] = useState("");
   const [kweets, setKweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
   const getDocuments = () => {
     const dbKweets = query(
       collection(dbService, "kweet"),
@@ -33,12 +35,21 @@ const Home = ({ userObj }) => {
   }, []);
   const onSubmit = async (event) => {
     event.preventDefault();
-    // await addDoc(collection(dbService, "kweet"), {
-    //   text: kweet,
-    //   createdAt: Date.now(),
-    //   creatorId: userObj.uid,
-    // });
-    // setKweet("");
+    let attachmentURL = "";
+    if (attachment !== "") {
+      const attachmentRef = ref(storage, `/images/${userObj.uid}/${uuidv4()}`);
+      await uploadString(attachmentRef, attachment, "data_url");
+      attachmentURL = await getDownloadURL(attachmentRef);
+      setAttachment("");
+    }
+
+    await addDoc(collection(dbService, "kweet"), {
+      text: kweet,
+      createdAt: Date.now(),
+      creatorId: userObj.uid,
+      attachmentURL,
+    });
+    setKweet("");
   };
   const onChange = (event) => {
     const {
