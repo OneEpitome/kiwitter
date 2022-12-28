@@ -57,7 +57,15 @@ const Home = ({ userObj }) => {
         />
         <input type="submit" value="Kweet" />
       </form>
-      <div>{<Kweet kweets={kweets} userObj={userObj} />}</div>
+      <div>
+        <ul>
+          {kweets.map((kweetObj) => {
+            return (
+              <Kweet key={kweetObj.id} kweetObj={kweetObj} userObj={userObj} />
+            );
+          })}
+        </ul>
+      </div>
     </>
   );
 };
