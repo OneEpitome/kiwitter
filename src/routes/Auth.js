@@ -5,7 +5,11 @@ import {
   signInAuth,
   googleProvider,
 } from "../firebase";
-import { signInWithPopup } from "firebase/auth";
+import {
+  setPersistence,
+  signInWithPopup,
+  browserLocalPersistence,
+} from "firebase/auth";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -31,6 +35,7 @@ const Auth = () => {
         await enrollUserEmailAndPassword(authService, email, password);
       } else {
         // log in
+        await setPersistence(authService, browserLocalPersistence);
         await signInAuth(authService, email, password);
       }
     } catch (error) {
@@ -47,8 +52,7 @@ const Auth = () => {
     } = event;
     if (name === "google") {
       let provider = googleProvider;
-      let data = await signInWithPopup(authService, provider);
-      console.log(data);
+      await signInWithPopup(authService, provider);
     }
   };
   return (
