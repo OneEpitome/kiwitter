@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/kiwitter/static/js/main.6eeb07ad.js",
+    "index.html": "/kiwitter/index.html",
+    "main.6eeb07ad.js.map": "/kiwitter/static/js/main.6eeb07ad.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.6eeb07ad.js"
+  ]
+}
