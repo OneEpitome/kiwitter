@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/kiwitter/static/js/main.72d659c8.js",
+    "main.js": "/kiwitter/static/js/main.6791adde.js",
     "index.html": "/kiwitter/index.html",
-    "main.72d659c8.js.map": "/kiwitter/static/js/main.72d659c8.js.map"
+    "main.6791adde.js.map": "/kiwitter/static/js/main.6791adde.js.map"
   },
   "entrypoints": [
-    "static/js/main.72d659c8.js"
+    "static/js/main.6791adde.js"
   ]
 }
